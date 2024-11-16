@@ -1,17 +1,67 @@
 <!DOCTYPE html>
-<html>
-  <body>
-    <div id="results"></div>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recherche YouTube</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
 
-    <script>
-      const API_KEY = 'AIzaSyBk0ul_Yk7YK6HBULGZZuXOqmN7azy_hvY';
-      const query = 'chatons mignons';
+    #search-container {
+      margin-bottom: 20px;
+    }
+
+    #search-input {
+      padding: 10px;
+      font-size: 16px;
+      width: 300px;
+    }
+
+    #search-button {
+      padding: 10px 15px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #results {
+      margin-top: 20px;
+    }
+
+    iframe {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="search-container">
+    <input type="text" id="search-input" placeholder="Rechercher des vidéos YouTube...">
+    <button id="search-button">Rechercher</button>
+  </div>
+
+  <div id="results"></div>
+
+  <script>
+    const API_KEY = 'AIzaSyBk0ul_Yk7YK6HBULGZZuXOqmN7azy_hvY';
+
+    // Fonction de recherche YouTube
+    function searchYouTube(query) {
       const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&key=${API_KEY}`;
 
       fetch(url)
         .then(response => response.json())
         .then(data => {
           const results = document.getElementById('results');
+          results.innerHTML = ''; // Vider les anciens résultats
+
+          if (data.items.length === 0) {
+            results.innerHTML = '<p>Aucune vidéo trouvée.</p>';
+            return;
+          }
+
+          // Afficher les nouvelles vidéos
           data.items.forEach(item => {
             const video = document.createElement('div');
             video.innerHTML = `
@@ -22,6 +72,24 @@
           });
         })
         .catch(error => console.error('Erreur:', error));
-    </script>
-  </body>
+    }
+
+    // Événement au clic du bouton de recherche
+    document.getElementById('search-button').addEventListener('click', () => {
+      const query = document.getElementById('search-input').value.trim();
+      if (query) {
+        searchYouTube(query);
+      } else {
+        alert('Veuillez entrer un terme de recherche.');
+      }
+    });
+
+    // Optionnel : Permettre la recherche en appuyant sur la touche "Entrée"
+    document.getElementById('search-input').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        document.getElementById('search-button').click();
+      }
+    });
+  </script>
+</body>
 </html>
