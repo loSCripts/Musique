@@ -1,2 +1,24 @@
-<iframe src="https://poki.com/en/g/subway-surfers" width="800" height="600" frameborder="0" allowfullscreen></iframe>
+<!DOCTYPE html>
+<html>
+  <body>
+    <div id="results"></div>
 
+    <script>
+      const API_KEY = 'AIzaSyBk0ul_Yk7YK6HBULGZZuXOqmN7azy_hvY';
+      const query = 'chatons mignons';
+      const url = https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&key=${API_KEY};
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          const results = document.getElementById('results');
+          data.items.forEach(item => {
+            const video = document.createElement('div');
+            video.innerHTML = <h3>${item.snippet.title}</h3><iframe width="560" height="315" src="https://www.youtube.com/embed/${item.id.videoId}" frameborder="0" allowfullscreen></iframe>;
+            results.appendChild(video);
+          });
+        })
+        .catch(error => console.error('Erreur:', error));
+    </script>
+  </body>
+</html>
